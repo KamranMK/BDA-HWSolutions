@@ -1,6 +1,6 @@
 # Business Data Analytics
 Kamran Mammadzada  
-`r Sys.Date()`  
+`r format(Sys.time(), '%d %B, %Y')`  
 
 __Solutions for Homework 1 and Practice Session 1__
 
@@ -21,7 +21,7 @@ library(tidyverse)
 library(data.table)
 library(lubridate) # lubridate used to convert char to datetime
 
-dt <- fread("../HW1/intro_dataset.csv") # load dataset
+dt <- fread("../../HW1/intro_dataset.csv") # load dataset
 ```
 
 ***
@@ -296,7 +296,7 @@ ggplot(dt) +
 First let's load the dataset
 
 ```r
-accounts <- fread("../HW1/bank_accounts.csv")
+accounts <- fread("../../HW1/bank_accounts.csv")
 ```
 
 Check if data types are correct

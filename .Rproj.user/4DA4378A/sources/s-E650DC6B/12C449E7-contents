@@ -2,7 +2,7 @@
 title: "Business Data Analytics"
 subtitle: "Solutions for Homework 1 and Practice Session 1"
 author: "Kamran Mammadzada"
-date: "`r Sys.Date()`"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
   html_document:
     keep_md: true
@@ -28,7 +28,7 @@ library(tidyverse)
 library(data.table)
 library(lubridate) # lubridate used to convert char to datetime
 
-dt <- fread("../HW1/intro_dataset.csv") # load dataset
+dt <- fread("../../HW1/intro_dataset.csv") # load dataset
 ```
 
 ***
@@ -254,7 +254,7 @@ ggplot(dt) +
 
 First let's load the dataset
 ```{r}
-accounts <- fread("../HW1/bank_accounts.csv")
+accounts <- fread("../../HW1/bank_accounts.csv")
 ```
 
 Check if data types are correct
