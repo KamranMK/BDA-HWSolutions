@@ -2,7 +2,7 @@
 title: "Business Data Analytics"
 subtitle: "Solutions for Homework 1 and Practice Session 1"
 author: "Kamran Mammadzada"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
+date: "`r Sys.Date()`"
 output: 
   html_document:
     keep_md: true

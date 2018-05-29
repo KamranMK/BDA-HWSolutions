@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1527612693039.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "9AF98EA7",
+    "lastKnownWriteTime" : 1527616008,
+    "last_content_update" : 1527616008659,
+    "path" : "C:/Users/kamra/Dropbox/UT/2nd/Business Data Analytics/Homeworks/BDA-HWSolutions/HW2 Solutions/solutions-hw2.Rmd",
+    "project_path" : "HW2 Solutions/solutions-hw2.Rmd",
+    "properties" : {
+        "chunk_output_type" : "console",
+        "cursorPosition" : "15,26",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
