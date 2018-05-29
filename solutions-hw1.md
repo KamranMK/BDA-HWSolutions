@@ -1,14 +1,6 @@
----
-title: "Business Data Analytics"
-subtitle: "Solutions for Homework 1 and Practice Session 1"
-author: "Kamran Mammadzada"
-date: "`r Sys.Date()`"
-output: 
-  html_document:
-    keep_md: true
-editor_options: 
-  chunk_output_type: console
----
+# Business Data Analytics
+Kamran Mammadzada  
+`r Sys.Date()`  
 
 __Solutions for Homework 1 and Practice Session 1__
 
@@ -19,7 +11,8 @@ Original Author of the homework questions - Anna Leontjeva.
 ***
 
 First let's load all the necessary data and libraries
-```{r warning=FALSE, error=FALSE, results='hide', message=FALSE}
+
+```r
 # knitr options
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -35,7 +28,8 @@ dt <- fread("../HW1/intro_dataset.csv") # load dataset
 
 ### Exercise 1 (1pt)
 
-```{r warning=FALSE, error=FALSE, eval=FALSE}
+
+```r
 dt %>%
   group_by(country) %>%
   filter(p1prom == 1) %>%
@@ -73,12 +67,15 @@ dt %>%
 
 Multi-chart bar:
 
-```{r}
+
+```r
 dt %>%
   mutate(p1prom = as.factor(p1prom)) %>%
   ggplot() +
     geom_bar(mapping=aes(x=country, fill=p1prom), position='dodge')
 ```
+
+![](solutions-hw1_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
 
 
 > How do you interpret this plot? Try to customize it by changing colors (check help for scale_fill_manual())
@@ -87,13 +84,16 @@ Answer:
 The plot takes on the values of first product's promotion which are 0 and 1, and treats them as if they are categories - product 1 promotion took place, product 1 promotion did not take place. Then the plot visualizes in pairs of 2 for each country. The plot allows us to see the number of promotions and non-promotions for product 1 for each country just within one plot. It seems that majority of product 1 for each country was sold with no promotion.
 
 Customized colors
-```{r}
+
+```r
 dt %>%
   mutate(p1prom = as.factor(p1prom)) %>%
   ggplot() +
     geom_bar(mapping=aes(x=country, fill=p1prom), position='dodge') + 
   scale_fill_manual(values=c("yellow", "green"))
 ```
+
+![](solutions-hw1_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 
 ***
 
@@ -102,20 +102,28 @@ dt %>%
 > Try to change ```geom_boxplot``` to ```geom_violin```. Can you explain what is the difference? Use help to check (type ?geom_violin). How you change the code to draw the median on a violin plot?
 s
 
-```{r}
+
+```r
 ggplot(data = dt, mapping = aes(x = storeNum, y = p1sales)) +
   geom_violin() + theme_bw()
 ```
 
+![](solutions-hw1_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+
 The different between ```geom_boxplot``` and ```geom_violin``` is that ```geom_violin``` also display the distribution of each value (in our case the distribution of sales of product 1 for each store number). ```geom_violin``` provides quantiles but its hard to read compared to ```geom_boxplot```
 
-```{r}
+
+```r
 # draw median on geom_violin
 # first option using geom_boxplot
 ggplot(data = dt, mapping = aes(x = storeNum, y = p1sales)) +
   geom_violin(draw_quantiles = c(0.25, 0.5, 0.75)) +
   theme_bw()
+```
 
+![](solutions-hw1_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+
+```r
 # second option using stat_summary
 ggplot(data = dt, mapping = aes(x = storeNum, y = p1sales)) +
   geom_violin() + 
@@ -123,18 +131,23 @@ ggplot(data = dt, mapping = aes(x = storeNum, y = p1sales)) +
   theme_bw()
 ```
 
+![](solutions-hw1_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
+
 ***
 
 ### Exercise 4 (1p)
 
 > Often line charts are “misused”. Look at the following graph and explain what is wrong with it:
 
-```{r}
+
+```r
 dt %>%
   group_by(country) %>%
   summarise(p1sales=sum(p1sales)) %>%
   ggplot(aes(x=country, y=p1sales, group=1)) + geom_line() + theme_bw()
 ```
+
+![](solutions-hw1_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 Answer:
 The line chart gives an impression of increasing and decreasing number of sales across countries. But in reality its just the total number of sales for each country visualized in a continuous manner, thus confusing the user. Here bar chart would be most fit to show
@@ -161,7 +174,8 @@ The code uses the following logic path:
 Modified version
 
 I have only taken sales for store number 102 for second year for product number 2
-```{r}
+
+```r
 dt %>%
   filter(storeNum=='102' & Year==2) %>%
   mutate(Week = str_pad(Week, width=2, side='left', pad='0')) %>%
@@ -170,6 +184,12 @@ dt %>%
   theme(axis.text.x = element_text(angle = 70, hjust = 1)) + 
   geom_smooth(aes(x=Time, y=p2sales, group=1), color='red')
 ```
+
+```
+## `geom_smooth()` using method = 'loess'
+```
+
+![](solutions-hw1_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 ***
 
@@ -189,17 +209,25 @@ There are three scatter plots presented in the above section of the homework fil
 
 > Make a scatterplot using sales data. What patterns do you observe?
 
-```{r}
+
+```r
 # product 1 & product 2 sales
 ggplot(dt) +
   geom_point(aes(x=p1sales, y=p2sales)) +
   labs(x="Product 1 Sales", y="Product 2 Sales")
 ```
 
+![](solutions-hw1_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+
 The above graph shows the relationship between sales of product 1 and sales of product 2. We can observe that there is a negative correlation, since more of product 1 sales is associated with less of sales for product 2. We can check this using Pearson correlation coefficient
 
-```{r}
+
+```r
 cor(dt$p1sales, dt$p2sales) # p1sales & p2sales correlation coefficient
+```
+
+```
+## [1] -0.5583594
 ```
 
 The negative coefficient supports our claim
@@ -214,7 +242,8 @@ Based on the dataset I got curious about the following questions:
 
 1. What are the top 5 stores in overall sales?
 
-```{r}
+
+```r
 dt %>%
   group_by(storeNum) %>%
   summarise(total_sales = sum(p1sales) + sum(p2sales)) %>%
@@ -225,8 +254,15 @@ dt %>%
     labs(x = "Store #", y = "Total Sales")
 ```
 
+```
+## Selecting by total_sales
+```
+
+![](solutions-hw1_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+
 2. What are the product 1 sales indicators of stores in US during the first quarter of Year 1?
-```{r}
+
+```r
 dt %>%
   filter(country == "US" & Week %in% c(1:12)) %>%
   ggplot(aes(x = factor(Week))) +
@@ -235,14 +271,19 @@ dt %>%
          x="Week", y="Product 1 Sales")
 ```
 
+![](solutions-hw1_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+
 Based on the above, 1st, 6th, 8th and 11th weeks during 1st quarter were not the best performing for product 1
 
 3. What is the correlation of sales of product 1 and product 2 with color indicating country?
 
-```{r}
+
+```r
 ggplot(dt) +
   geom_point(aes(x=p1sales, y=p2sales, color=factor(country)))
 ```
+
+![](solutions-hw1_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 
 ***
 
@@ -253,26 +294,57 @@ ggplot(dt) +
 #### Load Data & Summarize
 
 First let's load the dataset
-```{r}
+
+```r
 accounts <- fread("../HW1/bank_accounts.csv")
 ```
 
 Check if data types are correct
-```{r}
+
+```r
 str(accounts)
 ```
 
-Convert time to datetime
-```{r}
+```
+## Classes 'data.table' and 'data.frame':	120 obs. of  4 variables:
+##  $ time     : chr  "2007-09-01" "2007-10-01" "2007-11-01" "2007-12-01" ...
+##  $ account_a: num  8108 8021 8000 7905 8342 ...
+##  $ account_b: num  4897 4897 4897 4894 4893 ...
+##  $ account_c: num  427 871 1027 696 896 ...
+##  - attr(*, ".internal.selfref")=<externalptr>
+```
 
+Convert time to datetime
+
+```r
 accounts$time <- as.Date(accounts$time)
 
 str(accounts) # check if time is Date now
 ```
 
+```
+## Classes 'data.table' and 'data.frame':	120 obs. of  4 variables:
+##  $ time     : Date, format: "2007-09-01" "2007-10-01" ...
+##  $ account_a: num  8108 8021 8000 7905 8342 ...
+##  $ account_b: num  4897 4897 4897 4894 4893 ...
+##  $ account_c: num  427 871 1027 696 896 ...
+##  - attr(*, ".internal.selfref")=<externalptr>
+```
+
 Show summary statistics
-```{r}
+
+```r
 summary(accounts)
+```
+
+```
+##       time              account_a      account_b      account_c     
+##  Min.   :2007-09-01   Min.   :   0   Min.   :4873   Min.   : 217.9  
+##  1st Qu.:2010-02-22   1st Qu.:3992   1st Qu.:5225   1st Qu.: 520.8  
+##  Median :2012-08-16   Median :4969   Median :6368   Median : 701.4  
+##  Mean   :2012-08-15   Mean   :4995   Mean   :6399   Mean   : 726.7  
+##  3rd Qu.:2015-02-08   3rd Qu.:6991   3rd Qu.:7456   3rd Qu.: 979.4  
+##  Max.   :2017-08-01   Max.   :8342   Max.   :8418   Max.   :1179.1
 ```
 
 Based on summary stats it seems that transactions amounts between customer a and b are more or less similar while customer c has different spending dynamics.
@@ -281,7 +353,8 @@ Based on summary stats it seems that transactions amounts between customer a and
 
 Before we move on with analysing and visualizing, we will tidy the data (use gather), to include accounts as row values
 
-```{r}
+
+```r
 acc <- accounts %>%
   gather(account_a, account_b, account_c, key = "account", value="amount") # gather data
 
@@ -293,8 +366,13 @@ acc$account[acc$account =="account_c"] <- "c"
 unique(acc$account) # check if values changed
 ```
 
+```
+## [1] "a" "b" "c"
+```
+
 Next, to enable use more granular analysis, we will divide the date column into day, month, year
-```{r}
+
+```r
 df <- acc %>%
   mutate(year = as.integer(format(time, format = "%Y")),
          month = as.integer(format(time, format = "%m")),
@@ -306,15 +384,19 @@ df <- acc %>%
 
 It would be good to understand each customers earning and spending pattern based on their account balance. We will visualize each customers balances over time
 
-```{r}
+
+```r
 ggplot(df, aes(x=time, y=amount)) +
   geom_line(aes(color=account)) + 
   scale_color_discrete(name="Account", labels=c("a", "b", "c"))
 ```
 
+![](solutions-hw1_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+
 Based on the above graph it seems that customer a's balance has been going down and possibly the customer has closed or stopped using the account since last balance amount 0
 
-```{r}
+
+```r
 # check customer a's 5 last transactions
 df %>%
   filter(account=="a") %>%
@@ -323,12 +405,22 @@ df %>%
   tail(5)
 ```
 
+```
+##           time account   amount
+## 116 2017-04-01       a 545.5007
+## 117 2017-05-01       a 340.2164
+## 118 2017-06-01       a 406.3788
+## 119 2017-07-01       a 206.8893
+## 120 2017-08-01       a   0.0000
+```
+
 Customer b's balance has been increasing over time and potentially this is a savings or deposit account for him/her.
 Customer c seems to actively use their balance on daily basis, assumption is that this account is used for monthly salary or some sort of budget.
 
 Next, it is would be interesting to see the final balance across three acounts by the end of each year. We will assume that the year ends by 01-01, thus balances for those dates are taken into account
 
-```{r}
+
+```r
 df %>%
   filter(month == 1, day == 1) %>%
   group_by(year) %>%
@@ -339,12 +431,15 @@ df %>%
     labs(x="Year", y="Total")
 ```
 
+![](solutions-hw1_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
+
 
 According to the graph, overall balance of all accounts has been gradually decreasing during the past almost 10 years (2008-2017)
 
 Next, customer c had a pretty dynamic balance, which seems to change quite often. It would be interesting to visualize the relationship of the balance status with the months
 
-```{r}
+
+```r
 df %>%
   filter(account == "c") %>%
   select(month, account, amount) %>%
@@ -353,6 +448,8 @@ df %>%
     geom_boxplot() +
     labs(x="Months", y="Amount")
 ```
+
+![](solutions-hw1_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
 
 The above box plot shows the average, median and quartiles of the balance of a customer throughout 10 years. Judging from the size of the boxes the largest variation of balance is in March and in the last quarter of the year. This maybe due to certain spendings associated with holidays or some other reason (just assumptions)
 During summer, the balance variations (interquartile range) seem to be small with some outliers.
