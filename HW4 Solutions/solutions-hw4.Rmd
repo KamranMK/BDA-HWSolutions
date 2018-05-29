@@ -1,0 +1,458 @@
+---
+title: "Business Data Analytics"
+subtitle: "Solutions for Homework 4 - Link Analysis"
+author: "Kamran Mammadzada (B79435)"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+editor_options: 
+  chunk_output_type: console
+---
+
+The notebook contains solutions for Homework 4 - Link Analysis topic in Business Data Analytics Course taught by Rajesh Sharma - University of Tartu.
+
+__Task:__ We will use 3 different datasets representing various networks.
+
+* 1st Network - Hungary
+* 2nd Network - Romania
+* 3rd Network - Croatia
+
+# Data Preparation
+
+```{r message=FALSE, warning=FALSE}
+start_time <- Sys.time() # start time
+library(igraph)
+set.seed(222)
+# set working directory the files' path
+setwd("C:\\Users\\kamra\\Dropbox\\UT\\2nd\\Business Data Analytics\\Homeworks\\HW4")
+
+```
+
+```{r}
+# load csv files containing networks
+hungary_r <- read.csv("Hungary.csv")
+romania_r <- read.csv("Romania.csv")
+croatia_r <- read.csv("Croatia.csv")
+
+# create networks
+hnet <- graph.data.frame(hungary_r, directed = F)
+rnet <- graph.data.frame(romania_r, directed = F)
+cnet <- graph.data.frame(croatia_r, directed = F)
+```
+
+# Network Analysis
+
+# First Question
+
+> Which network has the highest number of nodes and edges (0.5p) ? If each of the network is connected or not (0.5p)?
+
+## Hungary Network
+
+Hungary Network has the following number of nodes
+```{r}
+# number of nodes
+V(hnet)
+```
+
+Hungary Network has the following number of edges
+```{r}
+# number of edges
+E(hnet)
+```
+
+Hungary Network has the following number of components
+```{r}
+# count components
+count_components(hnet)
+```
+
+
+## Romania Network
+
+Romania Network has the following number of nodes
+```{r}
+# number of nodes
+V(rnet)
+```
+
+Romania Network has the following number of edges
+```{r}
+# number of edges
+E(rnet)
+```
+
+Hungary Network has the following number of components
+```{r}
+# count components
+count_components(rnet)
+```
+
+
+## Croatia
+
+Croatia Network has the following number of nodes
+```{r}
+# number of nodes
+V(cnet)
+```
+
+Croatia Network has the following number of edges
+```{r}
+# number of edges
+E(cnet)
+```
+
+Croatia Network has the following number of components
+```{r}
+# count components
+count_components(cnet)
+```
+
+## Summary of Networks
+
+The following are the summary stats for nodes and edges for different networks.
+
+* Nodes
+  1. Hungary - 47,538
+  2. Romania - 41,773
+  3. Croatia - 54,573
+* Edges
+  1. Hungary - 222,887
+  2. Romania - 125,826
+  3. Croatia - 498,202
+
+It seems that **Croatia** out of the three networks has the highest number of both edges and nodes.
+
+All three networks have one connected components which indicates that all of them are connected in one component.
+
+*** 
+
+# Second question
+
+> Degree Distribution of each network. Plot the results. What do you think if each of the network is long tail or not ?
+
+
+# Hungary Network
+
+Plot the degree distribution of Hungary network.
+
+```{r}
+# assign labels and degrees accordingly
+V(hnet)$label <- V(hnet)$name
+V(hnet)$degree <- degree(hnet)
+
+# degree distribution
+# draw a histogram
+hist(V(hnet)$degree,
+     col = 'blue',
+     main = 'Histogram of hnet node degree',
+     ylab = 'Frequency',
+     xlab = 'Degree of vertices')
+```
+
+The histogram plot looks a lot like a chi-squared distribution but it is not really a long tail since there are very few values after 40. Its more like a short tail.
+
+In this distribution we can also see that, there are few nodes that have more than 30 connections and most nodes have up to 5.
+
+# Romania Network
+
+Plot the degree distribution of Romania network.
+
+```{r}
+# assign labels and degrees accordingly
+V(rnet)$label <- V(rnet)$name
+V(rnet)$degree <- degree(rnet)
+
+# degree distribution
+# draw a histogram
+hist(V(rnet)$degree,
+     col = 'blue',
+     main = 'Histogram of hnet node degree',
+     ylab = 'Frequency',
+     xlab = 'Degree of vertices')
+```
+
+The histogram plot above is similar to Hungary's network as well. Its not really a long tail, more like a short tail. This means that there are many nodes that up to 5 ot 6 connections and very few that have more than 20.
+
+
+# Croatia Network
+
+Plot the degree distribution of Croatia network.
+
+```{r}
+# assign labels and degrees accordingly
+V(cnet)$label <- V(cnet)$name
+V(cnet)$degree <- degree(cnet)
+
+# degree distribution
+# draw a histogram
+hist(V(cnet)$degree,
+     col = 'blue',
+     main = 'Histogram of hnet node degree',
+     ylab = 'Frequency',
+     xlab = 'Degree of vertices')
+```
+
+The histogram is similar to the two previous ones. We observe short tail rather than long tail.
+
+***
+
+# Third Question
+
+> Which network is the most stretch out or spread out ?
+
+A good measure of network stretch or spread is network diameter.
+
+Let's check network diameter for each of the networks
+
+```{r}
+# Hungary network diameter
+diameter(hnet)
+
+# Romania network diameter
+diameter(rnet)
+
+# Croatia network diameter
+diameter(cnet)
+```
+
+From the above analysis the most spread out network is Romania with 19, seconds most spread is Hungary with 14 diameter and Croatia being last with 12.
+
+***
+
+# Fourth question
+
+> Which network is most tightly knit ?
+
+Edge density and clustering coefficient are good indicators of network tightness.
+
+Let's check both indicators for all networks.
+
+```{r}
+# edge density for Hungary network
+edge_density(hnet)
+
+# cluster coefficient for Hungary network
+transitivity(hnet)
+
+# edge density for Romania network
+edge_density(rnet)
+
+# cluster coefficient for Romania network
+transitivity(rnet)
+
+# edge density for Croatia network
+edge_density(cnet)
+
+# cluster coefficient for Croatia network
+transitivity(cnet)
+
+```
+
+## Summary
+
+Network densities are as following
+
+1. Hungary - 0.0001972614
+2. Romania - 0.000144218
+3. Croatia - 0.0003345706
+
+The most dense network based on the analysis is **Croatia**.
+
+Clustering Coefficient provides us with more information on network connectivity. Follwing are the coefficients for each network.
+
+1. Hungary - 0.09292402
+2. Romania - 0.0752667
+3. Croatia - 0.1146301
+
+**Croatia** has the highest coefficient which supports our claim on it being the most tight network.
+
+***
+
+# Fifth Question
+
+> Calculate the total communities in each network. Use any two community detection (CD) algorithms and report for each network, the total communities being formed using each of the CD algorithms. Each value being reported carries 0.5 p marks.
+
+We will use two Community Detection Algorithms and report number of communities generated by each algorithm:
+
+1. Louvain
+2. Walktrap
+
+## Hungary Network
+
+```{r}
+# cluster louvain algorithm
+hnet_cl <- cluster_louvain(hnet)
+
+# cluster walktrap
+hnet_cw <- cluster_walktrap(hnet)
+
+```
+
+Number of communities found by Louvain for Hungary
+
+```{r}
+# number of communities found by Louvain
+length(unique(hnet_cl$membership))
+```
+
+Number of communities found by Louvain for Hungary
+```{r}
+# number of communities found by Walktrap
+length(unique(hnet_cw$membership))
+```
+
+
+## Romania Network
+
+```{r}
+# cluster louvain algorithm
+rnet_cl <- cluster_louvain(rnet)
+
+# cluster walktrap
+rnet_cw <- cluster_walktrap(rnet)
+```
+
+Number of communities found by louvain algorithm
+```{r}
+length(unique(rnet_cl$membership))
+```
+
+Number of communities found by walktrap algorithm
+```{r}
+length(unique(rnet_cw$membership))
+```
+
+## Croatia Network
+
+```{r}
+# cluster louvain algorithm
+cnet_cl <- cluster_louvain(cnet)
+
+# cluster walktrap
+cnet_cw <- cluster_walktrap(cnet)
+```
+
+Number of communities found by louvain algorithm
+```{r}
+length(unique(cnet_cl$membership))
+```
+
+Number of communities found by walktrap algorithm
+```{r}
+length(unique(cnet_cw$membership))
+```
+
+***
+
+# Sixth Question
+
+> In each network report the top 5 central nodes based on degree, closeness and betweennness centrality measures. You get 1p for each network, if you report all the top 5 nodes, using all the 3 central measures.
+
+## Hungary
+
+We will explore degree, closeness and betweenness of nodes in Hungary network.
+```{r}
+# degree
+dl1 <- degree(hnet)
+
+# show top 5 nodes
+head(sort(dl1, decreasing = T), 5)
+
+```
+
+Top 5 nodes based on closeness
+```{r warning=FALSE}
+# get closesness measures
+cl1 <- closeness(hnet, mode = 'all', weights = NA)
+
+# show top 5 nodes
+head(sort(cl1, decreasing = T), 5)
+```
+
+Top 5 nodes based on betweenness
+```{r}
+# get betweenness measures
+bl1 <- betweenness(hnet)
+
+# show top 5 nodes
+head(sort(bl1, decreasing = T), 5)
+```
+
+Interesting that it seems that nodes 14900 and 40491 are top 2 nodes across 3 parameters.
+
+## Romania Network
+
+We will explore degree, closeness and betweenness of nodes in Romania network.
+```{r}
+# degree
+dl1 <- degree(rnet)
+
+# show top 5 nodes
+head(sort(dl1, decreasing = T), 5)
+
+```
+
+Top 5 nodes based on closeness
+```{r warning=FALSE}
+# get closesness measures
+cl1 <- closeness(rnet, mode = 'all', weights = NA)
+
+# show top 5 nodes
+head(sort(cl1, decreasing = T), 5)
+```
+
+Top 5 nodes based on betweenness
+```{r}
+# get betweenness measures
+bl1 <- betweenness(rnet)
+
+# show top 5 nodes
+head(sort(bl1, decreasing = T), 5)
+```
+
+
+## Croatia Network
+
+We will explore degree, closeness and betweenness of nodes in Croatia network.
+```{r}
+# degree
+dl1 <- degree(cnet)
+
+# show top 5 nodes
+head(sort(dl1, decreasing = T), 5)
+
+```
+
+Top 5 nodes based on closeness
+```{r}
+# get closesness measures
+cl1 <- closeness(cnet, mode = 'all', weights = NA)
+
+# show top 5 nodes
+head(sort(cl1, decreasing = T), 5)
+```
+
+Top 5 nodes based on betweenness
+```{r}
+# get betweenness measures
+bl1 <- betweenness(cnet)
+
+# show top 5 nodes
+head(sort(bl1, decreasing = T), 5)
+```
+
+
+***
+
+It is interesting to see how long it took to run through the code.
+```{r}
+end_time <- Sys.time() # end time for knn
+
+fin_time <- end_time - start_time
+
+fin_time
+```
+
