@@ -28,7 +28,7 @@ library(tidyverse)
 library(data.table)
 library(lubridate) # lubridate used to convert char to datetime
 
-dt <- fread("../../HW1/intro_dataset.csv") # load dataset
+dt <- fread("intro_dataset.csv") # load dataset
 ```
 
 ***
